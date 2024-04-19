@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRef, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setNextTrack, setPrevTrack, startStop, shuffleTracks, likeTrack, dislikeTrack } from '../../store/musicSlice';
+import { setNextTrack, setPrevTrack, startStop, likeTrack, dislikeTrack } from '../../store/musicSlice';
 import 'react-loading-skeleton/dist/skeleton.css';
 import * as S from './AudioPlayer.styles';
 import { BtnIcon } from '../../App.styles';
@@ -19,11 +19,11 @@ function secondsToTimeString(seconds) {
   )
 }
 
-function AudioPlayer({track}) {
+function AudioPlayer({track, shuffleTracks, isShuffled}) {
   const navigate = useNavigate();
   const { logout } = useUserContext();
   const isPlaying = useSelector(state => state.music.isPlaying);
-  const isShuffled = useSelector(state => state.music.isShuffle);
+ 
   const liked = useSelector(state => state.music.currentTrackLiked);
   const dispatch = useDispatch();
 

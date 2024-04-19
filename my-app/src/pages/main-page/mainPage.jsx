@@ -11,8 +11,10 @@ import { getAllTracks } from '../../api/api.jsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTrack } from '../../store/CurrentTrackSlice.js';
 import { Context } from '../../routes.jsx';
+import { shuffleTracks } from '../../store/musicSlice.js';
 
 export function MainPage({ onClick }) {
+  const isShuffled = useSelector(state => state.music.isShuffle);
   const { setLoader } = useContext(Context);
   const currentTrack = useSelector((state) => state.tracks.currentTrack);
   const [newError, setNewError] = useState(null);
@@ -49,7 +51,7 @@ export function MainPage({ onClick }) {
             </S.MainCenterBlock>
             <SideBar onClick={onClick} />
           </S.Main>
-          {currentTrack ? <AudioPlayer currentTrack={currentTrack} /> : null}
+          {currentTrack ? <AudioPlayer shuffleTracks={shuffleTracks} isShuffled={isShuffled} currentTrack={currentTrack} /> : null}
           <S.FooterBlock />
         </S.Container>
       </S.Wrapper>
