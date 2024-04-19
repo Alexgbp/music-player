@@ -87,6 +87,7 @@ export default function AuthPage({ isLoginMode = false }) {
       password: password, 
       username: username,
     });
+    console.log(user);
 
     if (user.error) {
       let text = "";
