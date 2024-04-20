@@ -17,7 +17,13 @@ function Tracklist({ isLoading, tracks, error, playlistId, showFilters, playlist
     if (tracks) dispatch(loadTracks({ tracks }));
   }, [tracks]);
 
-  let filtredTracks = storedTracks ? storedTracks : [];
+  let [filtredTracks, setFiltredTracks] = useState(storedTracks ? storedTracks : []);
+
+
+  useEffect(() => {
+    setFiltredTracks(!filterTracks)
+  }, [storedTracks , filters])
+
   const [searchText, setSearchText] = useState('');
 
   function filterTracks() {
