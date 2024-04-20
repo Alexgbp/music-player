@@ -21,9 +21,7 @@ function Tracklist({ isLoading, tracks, error, playlistId, showFilters, playlist
 
 
 
-  useEffect(() => {
-    filterTracks(setFiltredTracks(!filtredTracks))
-  }, [storedTracks , filters])
+
 
   const [searchText, setSearchText] = useState('');
 
@@ -56,6 +54,10 @@ function Tracklist({ isLoading, tracks, error, playlistId, showFilters, playlist
         break;
     }
   }
+
+  useEffect(() => {
+    filterTracks(setFiltredTracks(!filtredTracks))
+  }, [storedTracks , filters])
 
 
   return (
