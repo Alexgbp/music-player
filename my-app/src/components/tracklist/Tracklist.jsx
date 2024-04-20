@@ -22,7 +22,7 @@ function Tracklist({ isLoading, tracks, error, playlistId, showFilters, playlist
 
 
   useEffect(() => {
-    setFiltredTracks(!filterTracks)
+    filterTracks(setFiltredTracks(!filterTracks))
   }, [storedTracks , filters])
 
   const [searchText, setSearchText] = useState('');
@@ -57,8 +57,6 @@ function Tracklist({ isLoading, tracks, error, playlistId, showFilters, playlist
     }
   }
 
-
-  filterTracks();
 
   return (
     <S.MainCenterblock>
