@@ -11,53 +11,46 @@ function Tracklist({ isLoading, tracks, error, playlistId, showFilters, playlist
   const dispatch = useDispatch();
   const filters = useSelector(state => state.music.filters);
   const order = useSelector(state => state.music.order);
-  const storedTracks = useSelector(state => state.music.tracks);
+  const [filtredTracks, setFiltredTracks] = useState(tracks || []);
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     if (tracks) dispatch(loadTracks({ tracks }));
-  }, [tracks]);
+    filterTracks()
+  }, [tracks, filters]);
 
-  let [filtredTracks, setFiltredTracks] = useState(storedTracks ? storedTracks : []);
+  const filterTracks = () => {
+    let filteredList = tracks
 
-
-
-
-
-  const [searchText, setSearchText] = useState('');
-
-  function filterTracks() {
     if (filters.author?.length) {
-      setFiltredTracks(filtredTracks.filter((track) => filters.author.includes(track.author.toLowerCase())))
+      filteredList = tracks.filter((track) => filters.author.includes(track.author.toLowerCase()))
     }
     if (filters.genre?.length) {
-      setFiltredTracks(filtredTracks.filter((track) => filters.genre.includes(track.genre.toLowerCase())))
+      filteredList = tracks.filter((track) => filters.genre.includes(track.genre.toLowerCase()))
     }
 
     if (searchText) {
-      setFiltredTracks(filtredTracks.filter((track) => track.name.toLowerCase().includes(searchText.toLowerCase())))
+      filteredList = tracks.filter((track) => track.name.toLowerCase().includes(searchText.toLowerCase()))
     }
-
-    const defaultOrder = filtredTracks ? [...filtredTracks] : [];
+    const defaultOrder = filteredList ? [...filteredList] : [];
     switch (order.value) {
       case 2:
         // eslint-disable-next-line no-case-declarations
-        let x = [...filtredTracks].sort((a, b) => new Date(b.release_date) -  new Date(a.release_date));
+        let x = [...filteredList].sort((a, b) => new Date(b.release_date) -  new Date(a.release_date));
         setFiltredTracks(x);
         break;
       case 3: 
         // eslint-disable-next-line no-case-declarations
-        let y = [...filtredTracks].sort((a, b) => new Date(a.release_date) -  new Date(b.release_date))
+        let y = [...filteredList].sort((a, b) => new Date(a.release_date) -  new Date(b.release_date))
         setFiltredTracks(y);
         break;
       default:
         setFiltredTracks(defaultOrder);
         break;
     }
-  }
 
-  useEffect(() => {
-    filterTracks()
-  }, [storedTracks , filters])
+    setFiltredTracks(filteredList)
+  }
 
 
   return (
