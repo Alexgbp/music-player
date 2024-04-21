@@ -27,14 +27,14 @@ function Tracklist({ isLoading, tracks, error, playlistId, showFilters, playlist
 
   function filterTracks() {
     if (filters.author?.length) {
-      filtredTracks = filtredTracks.filter((track) => filters.author.includes(track.author.toLowerCase()));
+      setFiltredTracks(filtredTracks.filter((track) => filters.author.includes(track.author.toLowerCase())))
     }
     if (filters.genre?.length) {
-      filtredTracks = filtredTracks.filter((track) => filters.genre.includes(track.genre.toLowerCase()));
+      setFiltredTracks(filtredTracks.filter((track) => filters.genre.includes(track.genre.toLowerCase())))
     }
 
     if (searchText) {
-      filtredTracks = filtredTracks.filter((track) => track.name.toLowerCase().includes(searchText.toLowerCase()));
+      setFiltredTracks(filtredTracks.filter((track) => track.name.toLowerCase().includes(searchText.toLowerCase())))
     }
 
     const defaultOrder = filtredTracks ? [...filtredTracks] : [];
@@ -42,21 +42,21 @@ function Tracklist({ isLoading, tracks, error, playlistId, showFilters, playlist
       case 2:
         // eslint-disable-next-line no-case-declarations
         let x = [...filtredTracks].sort((a, b) => new Date(b.release_date) -  new Date(a.release_date));
-        filtredTracks = x;
+        setFiltredTracks(x);
         break;
       case 3: 
         // eslint-disable-next-line no-case-declarations
         let y = [...filtredTracks].sort((a, b) => new Date(a.release_date) -  new Date(b.release_date))
-        filtredTracks = y;
+        setFiltredTracks(y);
         break;
       default:
-        filtredTracks = defaultOrder;
+        setFiltredTracks(defaultOrder);
         break;
     }
   }
 
   useEffect(() => {
-    filterTracks(setFiltredTracks(!filtredTracks))
+    filterTracks()
   }, [storedTracks , filters])
 
 
