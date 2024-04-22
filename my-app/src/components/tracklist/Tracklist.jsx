@@ -52,7 +52,6 @@ function Tracklist({ isLoading, tracks, error, playlistId, showFilters, playlist
     setFiltredTracks(filteredList)
   }
 
-
   return (
     <S.MainCenterblock>
       <S.CenterblockSearch>
