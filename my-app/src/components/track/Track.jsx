@@ -7,12 +7,13 @@ import {
   useAddFavoriteTrackMutation,
   useDeleteFavoriteTrackMutation,
 } from '../../service/getTracks'
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import {  useState } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useUserContext } from '../../context/user'
 import { dislikeTrack, likeTrack } from '../../store/musicSlice'
 
 function Track(props) {
+  const location = useLocation()
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { logout } = useUserContext();
@@ -24,13 +25,20 @@ function Track(props) {
     seconds <= 9 ? '0' + seconds : seconds
   }`;
 
-  const [isLike, setIsLike] = useState(true);
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  
+  const findUser = props.track?.stared_user?.find((t) => t.email == user);
+  const liked = findUser == null ? false : true;
+  const isFavorite = location.pathname === "/favorites"
+  const [isLike, setIsLike] = useState(isFavorite ? true : liked);
+
+
   const [addTrack, { error }] = useAddFavoriteTrackMutation();
   const [deleteTrack, {error: delError}] = useDeleteFavoriteTrackMutation();
   const currentTrack = useSelector((state) => state.music.currentTrack);
   const isPlaying = useSelector((state) => state.music.isPlaying);
   
-  const user = JSON.parse(localStorage.getItem('user'));
 
   if ((error && error.status == 401) || (delError && delError.status == 401))  {
     logout();
@@ -51,13 +59,6 @@ function Track(props) {
     setIsLike(false);
   }
 
-  useEffect(() => {
-    if (props.track.stared_user) {
-      const findUser = props.track.stared_user.find((t) => t.email == user);
-      const liked = findUser == null ? false : true;
-      setIsLike(liked);
-    }
-  }, [props.track]);
 
   const toggleLike = isLike ? handleDeleteTrack : handleAddTrack;
 
