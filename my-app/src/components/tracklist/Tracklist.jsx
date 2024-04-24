@@ -18,56 +18,51 @@ function Tracklist({
   const dispatch = useDispatch();
   const filters = useSelector((state) => state.music.filters);
   const order = useSelector((state) => state.music.order);
-  const [filtredTracks, setFiltredTracks] = useState(tracks || []);
   const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     if (tracks) dispatch(loadTracks({ tracks }));
-    filterTracks();
+    // filterTracks();
   }, [tracks, filters]);
 
   const filterTracks = () => {
-    let filteredList = tracks;
+    let filteredList = tracks?  [...tracks] : [];
 
     if (filters.author?.length) {
-      filteredList = tracks.filter((track) =>
+      filteredList = filteredList.filter((track) =>
         filters.author.includes(track.author.toLowerCase())
       );
     }
     if (filters.genre?.length) {
-      filteredList = tracks.filter((track) =>
+      filteredList = filteredList.filter((track) =>
         filters.genre.includes(track.genre.toLowerCase())
       );
     }
 
     if (searchText) {
-      filteredList = tracks.filter((track) =>
+      filteredList = filteredList.filter((track) =>
         track.name.toLowerCase().includes(searchText.toLowerCase())
       );
     }
-    const defaultOrder = filteredList ? [...filteredList] : [];
     switch (order.value) {
       case 2:
         // eslint-disable-next-line no-case-declarations
-        let x = [...filteredList].sort(
+         filteredList.sort(
           (a, b) => new Date(b.release_date) - new Date(a.release_date)
         );
-        setFiltredTracks(x);
         break;
       case 3:
         // eslint-disable-next-line no-case-declarations
-        let y = [...filteredList].sort(
+        filteredList.sort(
           (a, b) => new Date(a.release_date) - new Date(b.release_date)
         );
-        setFiltredTracks(y);
         break;
       default:
-        setFiltredTracks(defaultOrder);
         break;
     }
-
-    setFiltredTracks(filteredList);
+    return filteredList;
   };
+  const filtredTracks = filterTracks();
 
   return (
     <S.MainCenterblock>
@@ -96,14 +91,11 @@ function Tracklist({
             </S.PlaylistTitleSvg>
           </S.Col04>
         </S.ContentTitle>
-        {error ? (
-          <p>Не удалось загрузить плейлист, попробуйте позже: {error}</p>
-        ) : filtredTracks && filtredTracks.length > 0 ? (
-          <S.ContentPlaylist>
-            {isLoading ? (
+        {!error ? (
+            isLoading ? (
               <Skeleton />
-            ) : (
-              filtredTracks.map((track, index) => {
+            ) : filtredTracks.length ? (
+              filtredTracks?.map((track, index) => {
                 return (
                   <Track
                     key={`${track.id}${index}`}
@@ -116,11 +108,15 @@ function Tracklist({
                   />
                 );
               })
-            )}
+            ) : (
+              'треков нет'
+            )
+          ) : (
+            'ошибка'
+          )}
+              
+          <S.ContentPlaylist>
           </S.ContentPlaylist>
-        ) : (
-          <p>В этом плейтисте нет треков</p>
-        )}
       </S.CenterblockContent>
     </S.MainCenterblock>
   );

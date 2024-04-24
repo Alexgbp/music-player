@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -32,7 +32,10 @@ function Track(props) {
   const liked = findUser == null ? false : true;
   const isFavorite = location.pathname === "/favorites"
   const [isLike, setIsLike] = useState(isFavorite ? true : liked);
-
+ useEffect(() => {
+  const isLiked = props.track?.stared_user?.find((t) => t.email == user);
+  setIsLike(!!isLiked);
+ }, [props.track])
 
   const [addTrack, { error }] = useAddFavoriteTrackMutation();
   const [deleteTrack, {error: delError}] = useDeleteFavoriteTrackMutation();
