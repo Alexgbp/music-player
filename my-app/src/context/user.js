@@ -21,10 +21,10 @@ export const UserProvider = ({ children }) => {
   }
 
   const logout = () => {
+    dispatch(clearStore());
     setUser(null);
     localStorage.removeItem('user');
     localStorage.removeItem('token');
-    dispatch(clearStore());
   }
 
   return (

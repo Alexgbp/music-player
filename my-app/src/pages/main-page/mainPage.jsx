@@ -46,7 +46,7 @@ export function MainPage({ onClick }) {
               {newError ? (
                 <S.ErrorMessage>{newError}</S.ErrorMessage>
               ) : (
-                <TrackList currentTrack={currentTrack} />
+                <TrackList  currentTrack={currentTrack} />
               )}
             </S.MainCenterBlock>
             <SideBar onClick={onClick} />
